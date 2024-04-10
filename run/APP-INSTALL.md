@@ -41,6 +41,18 @@ bundle install
 EDITOR='subl --wait' ./bin/rails credentials:edit
 ```
 
+### dotenv environment
+[Setting up Dotenv in Rails](https://onlyoneaman.medium.com/setting-up-dotenv-in-rails-a8ce1c69e03d)
+```
+# initialise .env
+touch .env
+
+```
+
+
+
+
+
 ### create SQL instance
 ### [instances](https://console.cloud.google.com/sql/instances?project=heidless-pfolio-deploy-5)
 
@@ -124,6 +136,9 @@ gsutil iam ch allUsers:objectViewer gs://heidless-pfolio-deploy-5-alpha-blog-buc
 
 ## Secret Mgr
 ### Create encrypted credentials file and store key as Secret Manager secret
+
+gcloud secrets delete blog-demo-secret-2
+
 ```
 # install sublime
 wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/sublimehq-archive.gpg > /dev/null
