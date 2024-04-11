@@ -1,3 +1,12 @@
+# migration notes
+
+### application.html.erb
+```
+<%= javascript_include_tag "/javascript/application.js", "data-turbo-track": "reload", defer: true %>
+
+```
+
+
 
 # Utils
 

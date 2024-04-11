@@ -1,5 +1,26 @@
 Rails.application.routes.draw do
-  resources :photos
-  root "photos#index"
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+
+  root "pages#home"
+  get "about", to: "pages#about"
+
+  # resources :articles , only: [:show, :index, :new, :create, :edit, :update, :destroy]
+  
+  resources :articles
+
+  get "signup", to: "users#new"
+  
+  resources :users, except: [:new]
+
+  get 'login', to: 'sessions#new'
+  post 'login', to: 'sessions#create'
+
+  delete 'logout', to: 'sessions#destroy'
+
+  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
+  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  get "up" => "rails/health#show", as: :rails_health_check
+
+  # Defines the root path route ("/")
+  # root "posts#index"
 end
