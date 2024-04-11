@@ -1,5 +1,4 @@
 
-
 # Utils
 
 - ## [Fix Rails Blocked Host Error with Docker](https://danielabaron.me/blog/rails-blocked-host-docker-fix/)
@@ -69,9 +68,12 @@ sudo apt install apt-utils -->
 sudo apt install apt-utils
 ```
 
-# aetup APP_name
+
+################## CONFIGURE APP ###################
+# setup APP_name
 ```
-export APP_NAME=cat-photo-album
+export APP_NAME=alpha-blog
+echo $APP_NAME
 
 ```
 
@@ -80,7 +82,7 @@ export APP_NAME=cat-photo-album
 ### [gcp: Create a DATABASE](https://console.cloud.google.com/sql/instances/blog-demo-instance-1/databases?project=heidless-pfolio-deploy-5)
 
 ```
-gcloud sql instances create cat-photo-album-instance-0 \
+gcloud sql instances create $APP_NAME-instance-0 \
     --database-version POSTGRES_12 \
     --tier db-f1-micro \
     --region europe-west2
@@ -91,8 +93,8 @@ gcloud sql instances create cat-photo-album-instance-0 \
 ### [gcp: create user](https://console.cloud.google.com/sql/instances/blog-demo-instance-1/users?project=heidless-pfolio-deploy-5)
 
 ```
-gcloud sql databases create cat-photo-album-db-0 \
-    --instance cat-photo-album-instance-0
+gcloud sql databases create $ALPHA_BLOG-db-0 \
+    --instance $ALPHA_BLOG-instance-0
 
 ```
 
@@ -104,20 +106,20 @@ gcloud sql databases create cat-photo-album-db-0 \
 cat /dev/urandom | LC_ALL=C tr -dc '[:alpha:]'| fold -w 50 | head -n1 > dbpassword
 
 ---
-gcloud sql users create cat-photo-album-user-0 \
-   --instance=cat-photo-album-instance-0 --password=$(cat dbpassword)
+gcloud sql users create $ALPHA_BLOG-user-0 \
+   --instance=ALPHA_BLOG-instance-0 --password=$(cat dbpassword)
 
 ```
 ### Set up a Cloud Storage bucket
 ### [storage bucket](https://console.cloud.google.com/storage/browser?referrer=search&project=heidless-pfolio-deploy-5&prefix=&forceOnBucketsSortingFiltering=true)
 
 ```
-gsutil mb -l europe-west2 gs://heidless-pfolio-deploy-5-cat-photo-album-bucket-0
+gsutil mb -l europe-west2 gs://heidless-pfolio-deploy-5-$ALPHA_BLOG-bucket-0
 ```
 
 ### [bucket permissions]()
 ```
-gsutil iam ch allUsers:objectViewer gs://heidless-pfolio-deploy-5-cat-photo-album-bucket-0
+gsutil iam ch allUsers:objectViewer gs://heidless-pfolio-deploy-5-$ALPHA_BLOG-bucket-0
 
 ```
 
@@ -126,7 +128,7 @@ gsutil iam ch allUsers:objectViewer gs://heidless-pfolio-deploy-5-cat-photo-albu
 
 ```
 # utils
-gcloud secrets delete cat-photo-album-secret-0
+gcloud secrets delete $ALPHA_BLOG-secret-0
 ```
 
 ### install sublime - IF NEEDED
@@ -175,14 +177,14 @@ gcp:
 
 ### create gcp:secret
 ```
-gcloud secrets create cat-photo-album-secret-0 --data-file config/master.key
+gcloud secrets create $ALPHA_BLOG-secret-0 --data-file config/master.key
 ```
 
 ### describe Secret
 ```
-gcloud secrets describe cat-photo-album-secret-0
+gcloud secrets describe $ALPHA_BLOG-secret-0
 
-gcloud secrets versions access latest --secret cat-photo-album-secret-0
+gcloud secrets versions access latest --secret $ALPHA_BLOG-secret-0
 ---
 fdf07513d99a2d08645896b14651fcdc%%                                         
 gcloud projects describe heidless-pfolio-deploy-5 --format='value(projectNumber)'
@@ -195,12 +197,12 @@ gcloud projects describe heidless-pfolio-deploy-5 --format='value(projectNumber)
 
 ## COMPUTE access to secrets
 ```
-gcloud secrets add-iam-policy-binding cat-photo-album-secret-0 \
+gcloud secrets add-iam-policy-binding $ALPHA_BLOG-secret-0 \
     --member serviceAccount:110223146514-compute@developer.gserviceaccount.com \
     --role roles/secretmanager.secretAccessor
 
 ## CLOUD BUILd access to secrets
-gcloud secrets add-iam-policy-binding cat-photo-album-secret-0 \
+gcloud secrets add-iam-policy-binding $ALPHA_BLOG-secret-0 \
     --member serviceAccount:110223146514@cloudbuild.gserviceaccount.com \
     --role roles/secretmanager.secretAccessor
 
@@ -231,16 +233,15 @@ gcloud projects add-iam-policy-binding heidless-pfolio-deploy-5 \
 
 ```
 gcloud builds submit --config cloudbuild.yaml \
-    --substitutions _SERVICE_NAME=cat-photo-album-svc,_INSTANCE_NAME=cat-photo-album-instance-0,_REGION=europe-west2,_SECRET_NAME=cat-photo-album-secret-0
+    --substitutions _SERVICE_NAME=$ALPHA_BLOG-svc,_INSTANCE_NAME=$ALPHA_BLOG-instance-0,_REGION=europe-west2,_SECRET_NAME=$ALPHA_BLOG-secret-0
 
 ---
 
-gcloud run deploy cat-photo-album-svc \
+gcloud run deploy $ALPHA_BLOG-svc \
      --platform managed \
      --region europe-west2 \
-     --image gcr.io/heidless-pfolio-deploy-5/cat-photo-album-svc \
-     --image gcr.io/heidless-pfolio-deploy-5/cat-photo-album-svc \
-     --add-cloudsql-instances heidless-pfolio-deploy-5:europe-west2:cat-photo-album-instance-0 \
+     --image gcr.io/heidless-pfolio-deploy-5/$ALPHA_BLOG-svc \
+     --add-cloudsql-instances heidless-pfolio-deploy-5:europe-west2:$ALPHA_BLOG-instance-0 \
      --allow-unauthenticated
 
 ---
