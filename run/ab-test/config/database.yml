@@ -22,9 +22,20 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
 
+
+# [START cloudrun_rails_database]
 development:
   <<: *default
-  database: ab_test_development
+  database: <%= ENV["DEVELOPMENT_DATABASE"] %>
+  username: <%= ENV["DATABASE_USERNAME"] %>
+  password: <%= ENV["DATABASE_PASSWORD"] %>
+  host: "<%= ENV["SOCKET"] %>"
+# [END cloudrun_rails_database]
+
+
+# development:
+#   <<: *default
+#   database: ab_test_development
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.

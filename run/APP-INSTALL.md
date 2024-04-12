@@ -3,8 +3,32 @@
 ### application.html.erb
 ```
 <%= javascript_include_tag "/javascript/application.js", "data-turbo-track": "reload", defer: true %>
+```
+
+### postgres
+```
+psql -U heidless -c 'SHOW config_file'
+--
+ /etc/postgresql/14/main/postgresql.conf
+--
+```
+
+### linux
+```
+find / -name "postgresql.conf" -not -path "*/mnt*"
+find -name "postgresql.conf"
+
+find . -path ./misc -prune -o -name '*.txt' -print
+
+find / -name "postgresql.conf" ! -path '*/mnt/*'
+
+
+
 
 ```
+
+
+
 
 # Utils
 
