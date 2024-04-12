@@ -6,6 +6,13 @@
 
 ```
 
+### webpacker
+```
+npm install --save-dev webpack
+npm install --save-dev webpack-cli
+
+```
+
 # Utils
 
 - ## [Fix Rails Blocked Host Error with Docker](https://danielabaron.me/blog/rails-blocked-host-docker-fix/)
